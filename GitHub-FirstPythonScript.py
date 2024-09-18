@@ -25,12 +25,12 @@ regionBuffer = arcpy.analysis.Buffer(selectEcoregion, 'FlintHills_Buffer', '10 K
 #This line clips all of the ks rivers that are within the buffered ecoregion
 riverClip = arcpy.analysis.Clip('ks_major_rivers', regionBuffer, 'FH_River_Clip')
 
-#This line gets the total distance of the rivers in the clip
-#distanceKM = arcpy.analysis.Statistics(riverClip, 'totalDistance', [["Shape_Length", "SUM"]], MS)
+#This line takes the distance of each river segment and converts it from meters to miles
+arcpy.management.AddGeometryAttributes("FH_River_Clip", "LENGTH", "MILES_US")
 
-#This line takes the total distance and converts it from kilometers to miles
-#riverDistance_miles = distanceKM / 0.62137119
+#This line gets the total distance of the rivers in the clip
+arcpy.analysis.Statistics("FH_River_Clip", "outStats", [["LENGTH", "SUM"]])
 
 #Calculate stream length in miles first, then sum to produce a table with correct result:
-arcpy.management.AddGeometryAttributes("FH_River_Clip", "LENGTH", "MILES_US")
-arcpy.analysis.Statistics("FH_River_Clip", "outStats", [["LENGTH", "SUM"]])
+#arcpy.management.AddGeometryAttributes("FH_River_Clip", "LENGTH", "MILES_US")
+#arcpy.analysis.Statistics("FH_River_Clip", "outStats", [["LENGTH", "SUM"]])
